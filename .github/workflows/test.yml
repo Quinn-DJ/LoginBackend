@@ -1,0 +1,41 @@
+name: Backend tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: sudo apt-get update && sudo apt-get install -y jq curl unzip sqlite3
+
+      - name: Download PocketBase
+        env:
+          PB_VERSION: 0.40.6
+        run: |
+          set -euo pipefail
+          archive="pocketbase_${PB_VERSION}_linux_amd64.zip"
+          curl --fail --silent --show-error --location \
+            "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/${archive}" \
+            --output "/tmp/${archive}"
+          curl --fail --silent --show-error --location \
+            "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/checksums.txt" \
+            --output /tmp/pocketbase-checksums.txt
+          cd /tmp
+          grep " ${archive}$" pocketbase-checksums.txt | sha256sum -c -
+          unzip "${archive}" pocketbase -d /tmp/pocketbase-bin
+          chmod +x /tmp/pocketbase-bin/pocketbase
+
+      - name: Run API integration tests
+        env:
+          POCKETBASE_BIN: /tmp/pocketbase-bin/pocketbase
+        run: ./scripts/test-api.sh

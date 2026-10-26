@@ -1,0 +1,21 @@
+{$TASTYMAP_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+
+	handle /api/* {
+		reverse_proxy pocketbase:8090
+	}
+
+	respond 404
+
+	log {
+		output stdout
+		format json
+	}
+}
