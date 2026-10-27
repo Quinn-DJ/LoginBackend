@@ -128,14 +128,24 @@ place_payload=$(
     }'
 )
 
-place_id=$(
+created_place=$(
   curl --fail --silent \
     -H "Authorization: ${refreshed_user_one_token}" \
     -H "Content-Type: application/json" \
     -d "$place_payload" \
-    "${base_url}/api/collections/places/records" |
-    jq -er '.id'
+    "${base_url}/api/collections/places/records"
 )
+place_id=$(printf '%s' "$created_place" | jq -er '.id')
+sync_cursor=$(printf '%s' "$created_place" | jq -er '.updated')
+printf '%s' "$created_place" |
+  jq -e '.created != "" and .updated != ""' >/dev/null
+
+curl --fail --silent --get \
+  -H "Authorization: ${user_one_token}" \
+  --data-urlencode "sort=updated" \
+  --data-urlencode "filter=updated >= \"${sync_cursor}\"" \
+  "${base_url}/api/collections/places/records" |
+  jq -e '.items | length >= 1' >/dev/null
 
 curl --fail --silent \
   -H "Authorization: ${user_one_token}" \

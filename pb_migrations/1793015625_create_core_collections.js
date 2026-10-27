@@ -36,6 +36,20 @@ migrate(
       deleteRule: null,
       fields: [
         {
+          type: "autodate",
+          name: "created",
+          system: true,
+          onCreate: true,
+          onUpdate: false,
+        },
+        {
+          type: "autodate",
+          name: "updated",
+          system: true,
+          onCreate: true,
+          onUpdate: true,
+        },
+        {
           type: "relation",
           name: "owner",
           required: true,

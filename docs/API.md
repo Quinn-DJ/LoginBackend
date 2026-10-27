@@ -97,12 +97,15 @@ their tombstones locally before removing them.
 
 ## Error Handling
 
-- `400`: invalid field values or a duplicate `client_id`.
+- `400`: invalid field values, invalid login credentials, an anonymous create
+  request, or a duplicate `client_id`.
 - `401`: missing or expired auth token.
-- `403`: unauthenticated access, cross-user access, or an attempt to hard
-  delete a place.
+- `403`: an explicit API rule denial, including a hard-delete attempt.
 - `404`: the requested record does not exist or is not visible to the user.
 - `429`: login or API rate limit.
+
+An anonymous list request returns `200` with an empty list because PocketBase
+applies the ownership rule before exposing records.
 
 Pull and push operations are safe to retry. Clients should retain local edits
 until a successful response is persisted locally.
