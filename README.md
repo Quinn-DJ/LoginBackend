@@ -145,7 +145,8 @@ To restore:
 ## Security Boundaries
 
 - Caddy is the only service exposed publicly.
-- PocketBase is bound to server loopback and an internal Docker network.
+- PocketBase is bound to server loopback and Docker networks without a
+  published public port.
 - Public registration and hard deletion are disabled.
 - Every place is protected by an owner relation and API rules.
 - Tokens and user passwords are handled by PocketBase; plaintext passwords are

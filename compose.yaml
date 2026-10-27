@@ -16,6 +16,7 @@ services:
       - "127.0.0.1:8090:8090"
     networks:
       - backend
+      - egress
     read_only: true
     tmpfs:
       - /tmp
