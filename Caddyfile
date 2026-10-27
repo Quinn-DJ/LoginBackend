@@ -3,6 +3,10 @@
 	https_port {$TASTYMAP_HTTPS_PORT:8443}
 }
 
+http://{$TASTYMAP_DOMAIN} {
+	redir https://{$TASTYMAP_DOMAIN}:{$TASTYMAP_HTTPS_PORT}{uri} permanent
+}
+
 {$TASTYMAP_DOMAIN} {
 	encode zstd gzip
 
