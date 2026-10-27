@@ -22,7 +22,8 @@ The service runs PocketBase behind Caddy. PocketBase owns login tokens and the
 
 - Linux server with Docker Engine and the Docker Compose plugin.
 - A DNS record pointing the chosen API hostname to the server.
-- Inbound TCP 80 and 443 available for certificate issuance and API traffic.
+- Inbound TCP 80 available for certificate issuance and HTTP-to-HTTPS redirect.
+- Inbound TCP 8443 available for HTTPS API traffic.
 - A 32-character random value for PocketBase settings encryption.
 
 No Apple Developer Program membership is required for this backend.
@@ -37,7 +38,8 @@ No Apple Developer Program membership is required for this backend.
    ```
 
    Put the generated key in `PB_ENCRYPTION_KEY` and the real hostname in
-   `TASTYMAP_DOMAIN`.
+   `TASTYMAP_DOMAIN`. Keep `TASTYMAP_HTTPS_PORT=8443` unless port 443 is free
+   and the Compose port mapping is changed.
 
 2. Create writable data directories. PocketBase runs as UID/GID `10001`.
 
@@ -56,7 +58,7 @@ No Apple Developer Program membership is required for this backend.
 4. Verify HTTPS and the health endpoint:
 
    ```bash
-   curl --fail "https://${TASTYMAP_DOMAIN}/api/health"
+   curl --fail "https://${TASTYMAP_DOMAIN}:${TASTYMAP_HTTPS_PORT}/api/health"
    ```
 
    Caddy only exposes `/api/*`. The PocketBase admin UI is bound to
@@ -86,7 +88,7 @@ No Apple Developer Program membership is required for this backend.
    printf '\n'
    read -r -s -p "TastyMap user password: " USER_PASSWORD
    printf '\n'
-   BASE_URL="https://${TASTYMAP_DOMAIN}" \
+   BASE_URL="https://${TASTYMAP_DOMAIN}:${TASTYMAP_HTTPS_PORT}" \
    PB_ADMIN_EMAIL="admin@example.com" \
    PB_ADMIN_PASSWORD="$PB_ADMIN_PASSWORD" \
    USER_EMAIL="you@example.com" \

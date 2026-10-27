@@ -1,3 +1,8 @@
+{
+	http_port 80
+	https_port {$TASTYMAP_HTTPS_PORT:8443}
+}
+
 {$TASTYMAP_DOMAIN} {
 	encode zstd gzip
 

@@ -34,10 +34,10 @@ services:
         condition: service_healthy
     environment:
       TASTYMAP_DOMAIN: ${TASTYMAP_DOMAIN:?Set TASTYMAP_DOMAIN in .env}
+      TASTYMAP_HTTPS_PORT: ${TASTYMAP_HTTPS_PORT:-8443}
     ports:
       - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - "${TASTYMAP_HTTPS_PORT:-8443}:${TASTYMAP_HTTPS_PORT:-8443}"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

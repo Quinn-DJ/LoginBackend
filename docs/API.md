@@ -1,6 +1,14 @@
 # TastyMap API Contract
 
-All endpoints are served under `https://<TASTYMAP_DOMAIN>`.
+All endpoints are served under:
+
+```text
+https://<TASTYMAP_DOMAIN>:<TASTYMAP_HTTPS_PORT>
+```
+
+The default deployment uses external HTTP port `80` for certificate
+validation and HTTPS port `8443`. The client must include the HTTPS port in its
+API base URL.
 
 ## Authentication
 
